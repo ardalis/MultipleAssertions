@@ -1,5 +1,6 @@
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Shouldly;
 using Xunit;
 
 namespace MultipleAssertions;
@@ -89,13 +90,10 @@ public class Account_Constructor
     {
         var account = new Account(_testName, _testNumber, _testBalance);
 
-        var expectations = new List<Tuple<object, object>>()
-        {
-            new(_testName, account.Name),
-            new(_testName, account.Number),
-            new(_testBalance, account.Balance),
-        };
-        Assert.All(expectations, pair => Assert.Equal(pair.Item1, pair.Item2));
+        account.ShouldSatisfyAllConditions(
+            () => account.Name.ShouldBe(_testName),
+            () => account.Number.ShouldBe(_testNumber),
+            () => account.Balance.ShouldBe(_testBalance));
     }
 
 }
